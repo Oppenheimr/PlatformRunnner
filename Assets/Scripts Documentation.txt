@@ -1,0 +1,106 @@
+
+
+Platform Runner Case Documentation
+
+Content:
+    1- Scripting
+        1.a- Order of Script Folders
+         
+    2- Assets
+        2.a- Scripting
+        2.b- Visual Contents
+        2.c- Animations
+        2.d- Musics
+
+
+
+
+
+
+1- Scripting
+    
+
+    1-a Order of Script Folders
+        => Unity Utils : Extensions Helpers & Base Classes
+
+    2- Assets
+        2.a- Scripting 
+        => Utils Library : Personal Content (Developed by Umutcan Bağcı)
+        
+        2.b- Visual Contents 
+        => Utils Library : Personal Content (Developed by Umutcan Bağcı)
+        => Water Texture : https://assetstore.unity.com/packages/2d/textures-materials/water/stylize-water-texture-153577 (Edited)
+        => Joystick : https://assetstore.unity.com/packages/tools/input-management/joystick-pack-107631
+        
+        2c- Animations
+        => Pack => https://www.mixamo.com/#/?limit=96&page=1&query=Male+Drunk+Pack
+        
+        
+        
+        
+        
+        skull icon https://www.freeiconspng.com/downloadimg/5244
+        
+        
+        
+
+*General Notes  
+
+
+"AssetDatabase" Classı bazı örnek fonksyonlar;
+
+AssetDatabase.IsValidFolder("Assets/Lightmap Garbage");
+AssetDatabase.CreateFolder("Assets", "Lightmap Garbage");
+var assetName = AssetDatabase.LoadMainAssetAtPath(path).name;
+AssetDatabase.MoveAsset(oldPath, $"Assets/Lightmap Garbage/{assetName].asset");
+
+var oldPath = AssetDatabase.GetAssetPath(test);
+AssetDatabase.MoveAsset(oldPath, $"Assets/Lightmap Garbage/{test.name}.asset");
+
+
+
+Sahne de kod ile yapılan değşikliklerin değişiklik olarak algılanabilmesi ve kayıt edilebilmesi için;
+
+EditorUtility.SetDirty(target);
+EditorSceneManager.MarkSceneDirty(target.scene);
+
+Bir objenin bir komponenti içermesi şartı
+[RequireComponent(typeof(MeshFilter))]
+
+Editor Class Example
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(TargetClass))]
+public class TargetClassEditor : Editor
+{
+    TargetClass script;
+
+    private void OnEnable()
+    {
+        script = (TargetClass)target;
+    }
+
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+        GUILayout.Space(10);
+
+        if (GUILayout.Button("TargetClass özelliği"))
+        {
+            script.Function();
+        }     
+    }
+}
+#endif
+
+Editor ile uyarı göster onayla vs
+
+if (EditorUtility.DisplayDialog("Detected!", "Description", "Accept", "Cancel"))            
+    //Accept            
+else            
+    //Cancel                     
+
+GetComponent with encapsulation
+
+        private ClassName _class;
+        public ClassName Class => _class ? _class : (_class = GetComponent<ClassName>());
