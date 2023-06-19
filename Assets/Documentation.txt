@@ -69,3 +69,4 @@ Content:
         
         
        
+Note : If you want to look at the tool I wrote to create characters : Assets>Scripts>Editor>CreateCharacterWizard.cs
