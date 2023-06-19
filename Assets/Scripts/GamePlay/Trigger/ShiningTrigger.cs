@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace GamePlay.Trigger
 {
+    /// <summary>
+    /// Designed to add collider feature for shining obstacles.
+    /// </summary>
     public class ShiningTrigger : ObstacleTrigger
     {
         [SerializeField] private Material normalMaterial;

@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Editor
 {
+    /// <summary>
+    /// A class for automatic ragdoll generation developed by Lovatto Studios.
+    /// </summary>
     public class AutoRagdoller
     {
         private static Animator Anim;

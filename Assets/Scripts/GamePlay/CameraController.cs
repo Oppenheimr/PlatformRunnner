@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace GamePlay
 {
+    /// <summary>
+    /// Allows the camera to follow the player.
+    /// </summary>
     public class CameraController : MonoBehaviour
     {
         [SerializeField] private float smoothSpeed = 0.125f;  // Smoothness of movement
@@ -34,11 +37,7 @@ namespace GamePlay
     public class CameraControllerEditor : Editor
     {
         CameraController script;
-
-        private void OnEnable()
-        {
-            script = (CameraController)target;
-        }
+        private void OnEnable() => script = (CameraController)target;
 
         public override void OnInspectorGUI()
         {
@@ -46,9 +45,7 @@ namespace GamePlay
             GUILayout.Space(10);
 
             if (GUILayout.Button("Setup Offset"))
-            {
                 script.SetupOffset();
-            }     
         }
     }
 #endif

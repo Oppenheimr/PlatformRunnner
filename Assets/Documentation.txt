@@ -1,0 +1,71 @@
+Platform Runner Case Documentation
+
+Platform Runner Umutcan Bağcı tarafından 6/18/2023 tarihinde 12.00'dan itibaren 6/19/2023, 23.55 de tamamlanmıştır.
+6/19/2023, 05.00'a kadar Kodlar yorum satırları ile güncelenip, dosya düzeninde düzeltmeler ile revize edilip
+PoolManager.cs ve DotTweenText.cs scriptleri eklenmiştir.
+Bu dökümentasyon case çalışmamı inceleyecek geliştiricilerin işini kolaylaştırmak adına oluşturulmuştur.
+
+Platform Runner, developed by Umutcan Bağcı, was started on June 18, 2023, at 12:00 and completed on June 19, 2023, at 23:55.
+Until 05:00 on June 19, 2023, the code was updated with comment lines, file organization was improved, and revisions were made.
+PoolManager.cs and DotTweenText.cs scripts were added.
+This documentation is created to facilitate the work of developers reviewing my case study.
+
+
+Content:
+    1- Scripting
+        1.a- Order of Script Folders
+        1.b- Places inspired by coding
+        1.c- DESIGN
+        
+    2- Assets
+        2.a- Scripting
+        2.b- Visual Contents
+        2.c- Animations
+        2.d- Musics
+
+1- Scripting
+    
+
+    1-a Order of Script Folders
+        => Core : Managers
+        => Editor : For code that will only work in the editor during the game and not after compilation
+        => GamePlay : All in-game actions and mechanics
+        => UI : Classes that run in the User Interface
+        => Unity Utils : Extensions Helpers & Base Classes
+    
+    1-b Places inspired by coding
+        => Texture Painting : Painter.cs
+            - https://www.youtube.com/watch?v=XozHdfHrb1U
+            - https://drive.google.com/file/d/1mUzVd_ThkFoypqVbFkVN4aLnCmXFdnDQ/view          
+        
+        => Conveyor Belt : RotatingPlatform.cs
+            - https://www.youtube.com/watch?v=bbIXjQOzcVk&t=460s
+            
+    1-c DESIGNS
+        1-c.1 => OOP Examples : Character.cs, TriggerParticle.cs, SingletonBehavior.cs (& UnityUtils>BaseClasses> ...cs)
+        1-c.2 => Singleton Examples : JoystickController.cs, SingletonBehavior.cs
+        1-c.3 => Events Example : EventHandler.cs
+        1-c.4 => Object-Pooling Example : PoolManager.cs
+
+2- Assets
+    2.a- Scripting 
+        => Utils Library : Personal Content (Developed by Umutcan Bağcı)
+        => EditorHelper.cs : Personal Content (Developed by Umutcan Bağcı)
+        => Joystick : https://assetstore.unity.com/packages/tools/input-management/joystick-pack-107631
+        => AutRagdoller.cs : https://assetstore.unity.com/packages/templates/packs/mfps-mobile-245213
+        
+    2.b- Visual Contents 
+        => Utils Library : Personal Content (Developed by Umutcan Bağcı)
+        => Water Texture : https://assetstore.unity.com/packages/2d/textures-materials/water/stylize-water-texture-153577 (Edited)
+        
+    2c- Animations
+        => Pack : https://www.mixamo.com/#/?limit=96&page=1&query=Male+Drunk+Pack
+        
+    2d- Musics
+        => Background : https://assetstore.unity.com/packages/audio/music/101-song-hyper-casual-music-mega-pack-187586
+        => SFX : https://assetstore.unity.com/packages/audio/sound-fx/free-casual-game-sfx-pack-54116#content
+        
+        skull icon https://www.freeiconspng.com/downloadimg/5244
+        
+        
+       

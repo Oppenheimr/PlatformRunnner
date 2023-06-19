@@ -9,6 +9,9 @@ using Debug = UnityEngine.Debug;
 
 namespace Editor
 {
+    /// <summary>
+    /// Tool that helps developers in their work in the editor.
+    /// </summary>
     public class EditorHelper : MonoBehaviour
     {
         public static void ReplaceWithComponent(GameObject target, Type originalType, Type newType)
