@@ -9,6 +9,24 @@ namespace UnityUtils.Extensions
     /// </summary>
     public static class Vector3Extensions
     {
+        public static Vector3 AddToXAxis(this Vector3 pos, float add)
+        {
+            pos.x += add;
+            return pos;
+        }
+        
+        public static Vector3 AddToYAxis(this Vector3 pos, float add)
+        {
+            pos.y += add;
+            return pos;
+        }
+        
+        public static Vector3 AddToZAxis(this Vector3 pos, float add)
+        {
+            pos.z += add;
+            return pos;
+        }
+        
         public static Vector3 InvertYAxis(this Vector3 target)
         {
             target.y = -target.y;
@@ -49,5 +67,17 @@ namespace UnityUtils.Extensions
             int layerMask, QueryTriggerInteraction queryTriggerInteraction, params string[] ignoreTags)
             => PhysicsHelper.Raycast(origin, direction, out hitInfo, maxDistance, layerMask, queryTriggerInteraction, ignoreTags);
         
+        public static Vector3 AlignToFloor(this Vector3 position)
+        {
+            Ray ray = new Ray(position, Vector3.down);
+            return Physics.Raycast(ray, out var r, 100) ? r.point : position;
+        }
+        
+        public static Vector3 AlignToFloor(this Vector3 position, int layer)
+        {
+            Ray ray = new Ray(position, Vector3.down);
+            Debug.DrawRay(position, Vector3.down, Color.magenta, 5,true);
+            return Physics.Raycast(ray, out var r, 1000, layer) ? r.point : position;
+        }
     }
 }

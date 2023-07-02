@@ -29,7 +29,8 @@ namespace GamePlay
 
         private Collider _collider;
         public Collider Collider => _collider ? _collider : (_collider = GetComponentInChildren<Collider>());
-
+        
+        
         #endregion
 
         protected virtual void Awake()
@@ -40,6 +41,12 @@ namespace GamePlay
 
         private void OnCollisionEnter(Collision other)
         {
+            if (other.transform.CompareTag("Obstacle"))
+            {
+                Rigidbody.velocity = Vector3.zero;
+                return;
+            }
+            
             // Check if the collided object has the "Player" or "Enemy" tag
             if (!other.transform.CompareTag("Player") && !other.transform.CompareTag("Enemy"))
                 return;
@@ -50,28 +57,46 @@ namespace GamePlay
 
             // Calculate the direction from this character to the collided object
             Vector3 direction = transform.position.ToDirection(other.transform.position);
+            direction.y = 0;
+            
+            // Apply a force to the collided character
+            character.AddForce(direction * 2);
 
-            character.Ragdoll.AddForce(direction * 5); // Apply a force to the collided character
-            Ragdoll.AddForce(other.transform.position.ToDirection(transform.position) *
-                             5); // Apply a force to this character
+            direction = other.transform.position.ToDirection(transform.position);
+            direction.y = 0;
+            // Apply a force to this character
+            AddForce(direction * 2); 
 
             SoundManager.Instance.PlayHit(); // Play the hit sound effect
         }
 
+        public virtual void AddForce(Vector3 direction)
+        {
+            StartCoroutine(AddForceWaiter());
+            IEnumerator AddForceWaiter()
+            {
+                Rigidbody.AddForce(direction * 2, ForceMode.Impulse); 
+                yield return new WaitForSeconds(1);
+                Rigidbody.velocity = Vector3.zero;
+            }
+        }
+        
         public virtual void Die() => IsDead = true; // Method to mark the character as dead
 
-        public void Respawn(float delay)
+        public virtual void Respawn(float delay)
         {
             StartCoroutine(RespawnWaiter());
 
             IEnumerator RespawnWaiter()
             {
+                Rigidbody.velocity = Vector3.zero;
                 yield return new WaitForSeconds(delay); // Wait for the specified delay
                 transform.position = _awakePos; // Reset the position of the character
                 transform.rotation = _awakeRot; // Reset the rotation of the character
 
                 Ragdoll.SetRagdoll(false); // Deactivate the ragdoll mode
                 IsDead = false; // Mark the character as alive
+                Rigidbody.useGravity = true;
             }
         }
     }

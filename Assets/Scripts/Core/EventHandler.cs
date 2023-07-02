@@ -11,6 +11,6 @@ namespace Core
         /// Called every time that one coins change its value.
         /// </summary>
         public static Action<int> OnCoinUpdate;
-        public static void DispatchCoinUpdate(int coin) => OnCoinUpdate?.Invoke(coin);
+        public static void DispatchCoinUpdate(int coin = 1) => OnCoinUpdate(coin);
     }
 }

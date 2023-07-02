@@ -11,11 +11,9 @@ GameObject:
   - component: {fileID: 3904291998201944458}
   - component: {fileID: 108384872798950959}
   - component: {fileID: 2766890492739576549}
-  - component: {fileID: 3469287837368084240}
   - component: {fileID: 3469287837368084241}
-  - component: {fileID: 3469287837368084245}
   - component: {fileID: 1872657689}
-  - component: {fileID: 1872657688}
+  - component: {fileID: 3469287837368084245}
   m_Layer: 0
   m_Name: RotatingPlatform
   m_TagString: Untagged
@@ -88,22 +86,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!111 &3469287837368084240
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4423946943869895472}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 8bfd886a98d5e664aba8c7d1227c8aec, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 8bfd886a98d5e664aba8c7d1227c8aec, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!64 &3469287837368084241
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -118,20 +100,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -1643726260354785405, guid: dfd2177c702a4bd49ab843adecefec09, type: 3}
---- !u!114 &3469287837368084245
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4423946943869895472}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba777cd820c14d47a445fc33216d1a0c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 5.8
-  dragDirection: {fileID: 0}
 --- !u!54 &1872657689
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -148,17 +116,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 110
   m_CollisionDetection: 0
---- !u!64 &1872657688
-MeshCollider:
+--- !u!114 &3469287837368084245
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4423946943869895472}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -1643726260354785405, guid: dfd2177c702a4bd49ab843adecefec09, type: 3}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba777cd820c14d47a445fc33216d1a0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5.8

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace UnityUtils.Extensions
@@ -12,6 +13,20 @@ namespace UnityUtils.Extensions
         {
             color = new Color(color.r, color.g, color.b, alpha);
             return color;
+        }
+
+        public static bool EqualsWithTolerance(this Color color, Color target, float tolerance)
+        {
+            if (!(Math.Abs(color.r - target.r) < tolerance)) return false;
+            if (!(Math.Abs(color.g - target.g) < tolerance)) return false;
+            return Math.Abs(color.b - target.b) < tolerance;
+        }
+        
+        public static bool EqualsWithTolerance(this Color32 color, Color32 target, float tolerance)
+        {
+            if (!(Math.Abs(color.r - target.r) < tolerance)) return false;
+            if (!(Math.Abs(color.g - target.g) < tolerance)) return false;
+            return Math.Abs(color.b - target.b) < tolerance;
         }
     }
 }

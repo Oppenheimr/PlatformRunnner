@@ -23,14 +23,14 @@ namespace UI
 
         public void SetText(string text)
         {
+            TextMesh.text = text; // Updates the text of the TextMeshProUGUI component with the specified text.
             // If an animation is already in progress, abort the process.
             if (_onAnimate)
                 return; 
             _onAnimate = true; // Set the flag to indicate that an animation is in progress.
             
             // Starts the scaling animation and calls the ReScale method when it's completed.
-            transform.DOScale(transform.localScale * scaleMultiplier, duration).OnComplete(ReScale); 
-            TextMesh.text = text; // Updates the text of the TextMeshProUGUI component with the specified text.
+            transform.DOScale(transform.localScale * scaleMultiplier, duration).OnComplete(ReScale);
         }
 
         /// <summary>

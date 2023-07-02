@@ -23,20 +23,29 @@ namespace Core
                 poolObject.SetActivate(false);
         }
 
-        public Object GetParticle(PoolType type)
+        public static Object GetPoolObject(PoolType type)
         {
-            for (int i = 0; i < pools.Length; i++)
+            for (int i = 0; i < Instance.pools.Length; i++)
             {
-                if (pools[i].type != type)
-                    continue; // Move to the next pool if the pool's type doesn't match the requested type
-
-                pools[i].poolObjects = pools[i].poolObjects.TakeOrdinaryAddToEnd(0); // Add a new empty object to the pool's object array
-                var particle = pools[i].poolObjects[0]; // Get the first object
+                // Move to the next pool if the pool's type doesn't match the requested type
+                if (Instance.pools[i].type != type)
+                    continue;
+                // Add a new empty object to the pool's object array
+                Instance.pools[i].poolObjects = Instance.pools[i].poolObjects.TakeOrdinaryAddToEnd(0); 
+                var particle = Instance.pools[i].poolObjects[0]; // Get the first object
                 particle.SetActivate(true); // Activate the object
                 return particle; // Return the object
             }
 
             throw new Exception("Type not available");
+        }
+
+        public static Object[] GetPoolObjects(PoolType type, int count)
+        {
+            Object[] results = new Object[count];
+            for (int i = 0; i < count ; i++)
+                results[i] = GetPoolObject(type);
+            return results;
         }
     }
 
@@ -52,5 +61,6 @@ namespace Core
         CoinParticle,
         WinParticle,
         HitParticle,
+        UICoin
     }
 }

@@ -18,24 +18,24 @@ namespace Core
 
         [SerializeField] private FinishTrigger finishTrigger; // Reference to the finish trigger object
         [SerializeField] private Enemy[] enemy; // Array of enemy objects
-        private Character[] _characters; // Array of characters (including player and enemies)
+        [HideInInspector] public Character[] characters; // Array of characters (including player and enemies)
 
         public static Transform PlayerTransform =>
             Instance.player.transform; // Static property returning the player's transform
 
         public static Vector3 PlayerPos =>
-            Instance.player.transform.position; // Static property returning the player's position
+            Instance.player.Animator.transform.position; // Static property returning the player's position
 
         private void Awake()
         {
             Screen.orientation = ScreenOrientation.Portrait; // Set the screen orientation to portrait mode
 
             IsPlay = false; // Initialize the IsPlay flag as false
-            _characters =
+            characters =
                 new Character[enemy.Length + 1]; // Create a new array for characters with a length of enemy.Length + 1
             for (var i = 0; i < enemy.Length; i++)
-                _characters[i] = enemy[i]; // Copy enemy objects to the characters array
-            _characters[enemy.Length] = player; // Assign the player object as the last element of the characters array
+                characters[i] = enemy[i]; // Copy enemy objects to the characters array
+            characters[enemy.Length] = player; // Assign the player object as the last element of the characters array
         }
 
         private void LateUpdate()
@@ -43,13 +43,13 @@ namespace Core
             if (!IsPlay)
                 return; // If the game is not in play, exit the method
 
-            _characters =
-                _characters.OrderByDescending(x => x.transform.position.x)
+            characters =
+                characters.OrderByDescending(x => x.transform.position.x)
                     .ToArray(); // Sort the characters array based on their x-position in descending order
 
-            for (var i = 0; i < _characters.Length; i++)
+            for (var i = 0; i < characters.Length; i++)
             {
-                if (_characters[i] != player) continue; // Skip if the current character is not the player
+                if (characters[i] != player) continue; // Skip if the current character is not the player
                 UIManager.Instance
                     .UpdateScore(i +
                                  1); // Update the score UI based on the player's position in the sorted characters array

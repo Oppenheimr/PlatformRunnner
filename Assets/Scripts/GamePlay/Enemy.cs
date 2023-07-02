@@ -1,7 +1,11 @@
 using System;
+using System.Collections;
 using Core;
+using GamePlay.BotBehaviour;
+using GamePlay.Trigger;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityUtils.Extensions;
 using Random = UnityEngine.Random;
 
 namespace GamePlay
@@ -11,21 +15,23 @@ namespace GamePlay
     /// </summary>
     public class Enemy : Character
     {
-        public Transform target; // The target transform that the enemy will move towards
-
         [SerializeField] private float minSpeed = 12; // The minimum speed of the enemy
         [SerializeField] private float maxSpeed = 17; // The maximum speed of the enemy
-
+        
         private bool _isMove; // Flag indicating if the enemy is currently moving
-        private int _isMoveHash; // Hash ID of the "isMove" parameter in the Animator controller
+        public BaseBehaviour BaseBehaviour;
 
+        // Reference to the NavMeshAgent component
         private NavMeshAgent _agent;
-        public NavMeshAgent Agent => _agent ? _agent : (_agent = GetComponentInChildren<NavMeshAgent>()); // Reference to the NavMeshAgent component
+        public NavMeshAgent Agent => _agent ? _agent : (_agent = GetComponentInChildren<NavMeshAgent>());
 
         protected override void Awake()
         {
-            Agent.speed = Random.Range(minSpeed, maxSpeed); // Set a random speed for the enemy within the specified range
-            _isMoveHash = Animator.StringToHash("isMove"); // Get the hash ID of the "isMove" parameter
+            Agent.updateRotation = false;
+            // Set a random speed for the enemy within the specified range
+            Agent.speed = Random.Range(minSpeed, maxSpeed);
+
+            BaseBehaviour = new DefaultBehaviour(this);
             base.Awake();
         }
 
@@ -33,16 +39,37 @@ namespace GamePlay
         {
             if (!GameManager.IsPlay || IsDead) // Check if the game is not in play mode or the enemy is dead
                 return;
+            
+            // Create the movement vector
+            var movement = transform.position.ToDirection(Agent.destination).normalized;
+            movement.y = 0;
 
-            Agent.destination = target.position; // Set the destination of the NavMeshAgent to the target position
+            // Update the animator parameters for horizontal and vertical movement
+            Animator.SetFloat("Horizontal", -movement.z);
+            Animator.SetFloat("Vertical", movement.x);
+            Animator.SetFloat("Speed", movement.magnitude);
 
-            var move = Agent.acceleration > 0.1f; // Check if the enemy is currently moving based on its acceleration
-            if (_isMove == move)
-                return;
-
-            _isMove = move;
-            Animator.SetBool(_isMoveHash, _isMove); // Set the "isMove" parameter in the Animator to control the movement animation
+            BaseBehaviour?.UpdateBehaviour();
         }
 
+        public override void AddForce(Vector3 direction)
+        {
+            StartCoroutine(AddForceWaiter());
+            IEnumerator AddForceWaiter()
+            {
+                Agent.isStopped = true;
+                Rigidbody.AddForce(direction * 2, ForceMode.Impulse); 
+                yield return new WaitForSeconds(1);
+                Rigidbody.velocity = Vector3.zero;
+                Agent.isStopped = false;
+            }
+        }
+        
+        public override void Respawn(float delay)
+        {
+            Rigidbody.useGravity = false;
+            BaseBehaviour = new DefaultBehaviour(this);
+            base.Respawn(delay);
+        }
     }
 }

@@ -33,6 +33,7 @@ namespace Core
 
         private void OnCoinUpdate(int coin)
         {
+            Debug.Log("COIN");
             GameManager.Instance.currentCoin += coin; // Update the current coin count in the GameManager
             coinText.SetText(GameManager.Instance.currentCoin
                 .ToString()); // Update the coin text with the updated coin count

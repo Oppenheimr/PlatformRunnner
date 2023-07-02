@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Core;
 using UnityEngine;
+using UnityUtils.Extensions;
 
 namespace GamePlay
 {
@@ -73,7 +75,7 @@ namespace GamePlay
 
         #region UI Callbacks
 
-        public void SetBrushSizeMultiplier(float addMultiplier) => brushSizeMultiplier = (addMultiplier / 3) + 1;
+        public void SetBrushSizeMultiplier(float addMultiplier) => brushSizeMultiplier = addMultiplier * 1.2f + 1;
         public void SetYellow() => brushColor = yellowBrushColor;
         public void SetRed() => brushColor = redBrushColor;
         public void SetBlue() => brushColor = blueBrushColor;
@@ -93,31 +95,34 @@ namespace GamePlay
             Color32[] textureC32 = texture.GetPixels32();
             Color32[] brushC32 = brush.GetPixels32();
 
-            // Get the dimensions of the texture and brush
-            int textureWidth = texture.width;
-            int textureHeight = texture.height;
-            int brushWidth = brush.width;
-            int brushHeight = brush.height;
-
             // Calculate the starting position for painting based on the UV coordinate and brush size
-            int startX = Mathf.FloorToInt(coordinate.x * textureWidth) -
-                         Mathf.FloorToInt((brushWidth * brushSizeMultiplier) / 2f);
-            int startY = Mathf.FloorToInt(coordinate.y * textureHeight) -
-                         Mathf.FloorToInt((brushHeight * brushSizeMultiplier) / 2f);
+            int startX = Mathf.FloorToInt(coordinate.x * texture.width);
+            int startY = Mathf.FloorToInt(coordinate.y * texture.height);
+
+            // Calculate the scaled brush size based on brushSizeMultiplier
+            int scaledBrushWidth = Mathf.FloorToInt(brush.width * brushSizeMultiplier);
+            int scaledBrushHeight = Mathf.FloorToInt(brush.height * brushSizeMultiplier);
+
+            // Calculate the offset to center the brush
+            int offsetX = Mathf.FloorToInt(scaledBrushWidth / 2f);
+            int offsetY = Mathf.FloorToInt(scaledBrushHeight / 2f);
 
             // Iterate over each pixel in the brush and apply it to the texture
-            for (int y = 0; y < brushHeight; y++)
+            for (int y = 0; y < scaledBrushHeight; y++)
             {
-                for (int x = 0; x < brushWidth; x++)
+                for (int x = 0; x < scaledBrushWidth; x++)
                 {
-                    int textureIndex = (startY + Mathf.FloorToInt(y * brushSizeMultiplier)) * textureWidth +
-                                       (startX + Mathf.FloorToInt(x * brushSizeMultiplier));
-                    int brushIndex = y * brushWidth + x;
+                    int textureX = startX + x - offsetX;
+                    int textureY = startY + y - offsetY;
 
-                    // Check if the texture and brush indices are within bounds
-                    if (textureIndex >= 0 && textureIndex < textureC32.Length && brushIndex >= 0 &&
-                        brushIndex < brushC32.Length)
+                    // Check if the texture coordinates are within bounds
+                    if (textureX >= 0 && textureX < texture.width && textureY >= 0 && textureY < texture.height)
                     {
+                        int textureIndex = textureY * texture.width + textureX;
+                        int brushX = Mathf.FloorToInt(x / brushSizeMultiplier);
+                        int brushY = Mathf.FloorToInt(y / brushSizeMultiplier);
+                        int brushIndex = brushY * brush.width + brushX;
+
                         // Apply the brush color to the texture pixel using alpha blending based on the brush alpha value
                         textureC32[textureIndex] = Color32.Lerp(textureC32[textureIndex], brushColor,
                             brushC32[brushIndex].a / 255f);
@@ -130,10 +135,10 @@ namespace GamePlay
             texture.Apply();
 
             // Count the number of painted pixels
-            int paintedPix = 0;
+            var paintedPix = 0;
             foreach (var tex in textureC32)
             {
-                if (tex.r != baseColor.r && tex.g != baseColor.g && tex.b != baseColor.b)
+                if (!tex.EqualsWithTolerance(baseColor, 75))
                     paintedPix++;
             }
 
@@ -142,7 +147,7 @@ namespace GamePlay
             UIManager.Instance.UpdatePaintPercent((int)percent);
 
             // Check if the painting is complete (98% or more painted pixels) and notify the game manager
-            if (percent > 98)
+            if (percent >= 99.5f)
                 GameManager.Instance.OnComplete();
         }
 

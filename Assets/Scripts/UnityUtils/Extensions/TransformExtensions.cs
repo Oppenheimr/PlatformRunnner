@@ -61,11 +61,12 @@ namespace UnityUtils.Extensions
             transform.position = pos;
         }
 
-        public static void AddToPositionYAxis(this Transform transform, float add)
+        public static Vector3 AddToPositionYAxis(this Transform transform, float add)
         {
             Vector3 pos = transform.position;
             pos.y += add;
             transform.position = pos;
+            return transform.position;
         }
 
         public static void AddToPositionZAxis(this Transform transform, float add)
@@ -97,6 +98,43 @@ namespace UnityUtils.Extensions
                 case Axis.Z: rotation.z = value; break;
             }
             transform.rotation = Quaternion.Euler(rotation);
+        }
+        
+        public static void AlignToFloors(this Transform source)
+        {
+            Debug.Log(source.transform.position);
+
+            RaycastHit r;
+
+            float errorRate = -0.1f;
+            Transform t = source.transform;
+
+            Ray ray = new Ray(t.position + t.up, Vector3.down);
+            if (Physics.Raycast(ray, out r, 10000))
+            {
+                while (r.transform.gameObject == source.gameObject)
+                {
+                    Vector3 startRay = new Vector3(r.point.x, r.point.y + errorRate, r.point.z);
+                    Ray ray2 = new Ray(startRay, Vector3.down);
+
+                    errorRate -= 0.1f;
+                    Physics.Raycast(ray2, out r, 100);
+                    if (errorRate <= -100)
+                    {
+                        break;
+                    }
+                }
+
+                if (r.transform.gameObject != source.transform)
+                {
+                    t.position = r.point;
+                }
+                else
+                {
+                    Debug.Log(source.transform.name + "basaramadi");
+                }
+            }
+
         }
     }
 

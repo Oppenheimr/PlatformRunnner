@@ -1,17 +1,21 @@
 using Core;
 using UnityEditor;
 using UnityEngine;
+using UnityUtils.BaseClasses;
 
 namespace GamePlay
 {
     /// <summary>
     /// Allows the camera to follow the player.
     /// </summary>
-    public class CameraController : MonoBehaviour
+    public class CameraController : SingletonBehavior<CameraController>
     {
         [SerializeField] private float smoothSpeed = 0.125f;  // Smoothness of movement
         [SerializeField] private Vector3 offset;          // Distance between camera and target
 
+        private Camera _camera;
+        public Camera Camera => _camera ? _camera : (_camera = GetComponent<Camera>());
+        
         private void LateUpdate()
         {
             // Get the target's position and set the offset to adjust the distance between the camera and the target
@@ -34,7 +38,7 @@ namespace GamePlay
     
 #if UNITY_EDITOR
     [CustomEditor(typeof(CameraController))]
-    public class CameraControllerEditor : Editor
+    public class CameraControllerEditor : UnityEditor.Editor
     {
         CameraController script;
         private void OnEnable() => script = (CameraController)target;

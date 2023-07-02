@@ -1,4 +1,4 @@
-using System;
+using Editor;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
@@ -20,6 +20,14 @@ namespace GamePlay
         private Character _char;
         public Character Character => _char ? _char : (_char = GetComponentInChildren<Character>());
 
+        private Collider[] _colliders;
+        private Collider[] Colliders => _colliders != null ? _colliders : 
+            (_colliders = Character.Animator.GetComponentsInChildren<Collider>());
+        
+        private Rigidbody[] _rigidbodies;
+        private Rigidbody[] RigidBodies => _rigidbodies != null ? _rigidbodies : 
+            (_rigidbodies = Character.Animator.GetComponentsInChildren<Rigidbody>());
+
         private void Awake()
         {
             // Store the initial local position and rotation of the character's animator
@@ -29,47 +37,30 @@ namespace GamePlay
 
         public void AddForceRagdolled(Vector3 force)
         {
-            // Get the spine bone of the character and add force to its rigidbody
-            var spine = Character.Animator.GetBoneTransform(HumanBodyBones.Spine);
-            var spineRigid = spine.GetComponent<Rigidbody>();
-            spineRigid.AddForce(force * ForceMultiplier, ForceMode.Impulse);
+            foreach (var rigid in RigidBodies)
+                rigid.AddForce(force * ForceMultiplier, ForceMode.Impulse);
         }
 
         public void AddForce(Vector3 force) => Character.Rigidbody.AddForce(force * ForceMultiplier, ForceMode.Impulse);
 
         public void SetRagdoll(bool active)
         {
-            // Set the parent of the character's animator transform based on the ragdoll state
-            Character.Animator.transform.SetParent(active ? null : transform);
+            // Enable or disable colliders on the character's animator components based on the ragdoll state
+            foreach (var collider in Colliders)
+                collider.enabled = active;
 
-            if (!active)
-            {
-                // Reset the animator's local position and rotation when exiting ragdoll state
-                Character.Animator.transform.localPosition = _animatorPos;
-                Character.Animator.transform.localRotation = _animatorRot;
-
-                if (IsAI)
-                {
-                    // Adjust the position of the AI character to avoid clipping through the ground
-                    var currentPos = Character.transform.position;
-                    currentPos.y = 3.4f;
-                    Character.transform.position = currentPos;
-                }
-            }
-
-            if (IsAI)
-                GetComponent<NavMeshAgent>().enabled = !active;
-
+            foreach (var rigid in RigidBodies)
+                rigid.constraints = active 
+                    ? RigidbodyConstraints.None 
+                    : RigidbodyConstraints.FreezeAll;
+            
+            Character.Rigidbody.constraints = active 
+                ? RigidbodyConstraints.FreezeAll 
+                : RigidbodyConstraints.FreezeRotation;
+            
             Character.Rigidbody.useGravity = !active;
             Character.Collider.enabled = !active;
-
             Character.Animator.enabled = !active;
-
-            var colliders = Character.Animator.GetComponentsInChildren<Collider>();
-
-            // Enable or disable colliders on the character's animator components based on the ragdoll state
-            foreach (var collider in colliders)
-                collider.enabled = active;
         }
 
         public void CollidersClose()
@@ -89,7 +80,7 @@ namespace GamePlay
 
 #if UNITY_EDITOR
     [CustomEditor(typeof(Ragdoll))]
-    public class RagdollEditor : Editor
+    public class RagdollEditor : UnityEditor.Editor
     {
         Ragdoll script;
 

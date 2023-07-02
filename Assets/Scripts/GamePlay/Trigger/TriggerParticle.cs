@@ -20,7 +20,7 @@ namespace GamePlay.Trigger
         private IEnumerator ParticleWaiter(PoolType type, Transform teleport)
         {
             // Get a particle from the object pool
-            var particle = PoolManager.Instance.GetParticle(type);
+            var particle = PoolManager.GetPoolObject(type);
             // Set the particle's position to the teleport position
             particle.GameObject().transform.position = teleport.position;
             // Wait for 5 seconds
